@@ -1,45 +1,38 @@
 import { useParams } from "react-router";
 import {useState} from 'react';
-import {users} from '../usersData';
+import { useHistory } from "react-router";
 
-const CreateUser = ({status})=>{
+const CreateUser = ({status,addNewUser,updateUserCallBack})=>{
+    
     const {id:eid} = useParams();
-    const usersList = users;
-    const [name,setName] = useState();
-    const [id,setId] = useState(eid);
-    const [dept,setDept] = useState();
+    const history = useHistory();
+    const [user,setUser] = useState({name:'',id:'',dept:''})
 
-    const nameHandler = (e)=>{
-        setName(e.target.value);
+
+    const change = (e)=>{
+        const attr = e.target.name;
+        const val = e.target.value;
+
+        setUser({...user,[attr]:val});
     }
-
-    const idHandler = (e)=>{
-        setId(e.target.value);
-    }
-
-    const deptHandler = (e)=>{
-        setDept(e.target.value);
-    }
-
+    
     const submitHandeler = (e)=>{
         e.preventDefault();
 
-        const u = {
-            name:name,
-            id:id,
-            dept:dept
-        }
-        usersList.push(u);
+        status === 'add'?addNewUser(user):updateUserCallBack(eid,user);
+
+        history.push('/userlist');
     }
+    
 
     return(
         <>
             <br/>
             <h3>{status==='add'?'Create':'Edit'} User Page: {eid}</h3>
             <form onSubmit={submitHandeler}>
-                Name: <input type='text' name='name' value={name} onChange={nameHandler}/> <br/>
-                ID: <input type='text' name='id' value={id} onChange={idHandler}/><br/>
-                Dept: <input type='text' name='dpet' value={dept} onChange={deptHandler}/><br/>
+                Name: <input type='text' name='name' value={user.name} onChange={change}/> <br/>
+                ID: <input type='text' name='id' value={user.id} onChange={change}/><br/>
+                Dept: <input type='text' name='dept' value={user.dept} onChange={change}/><br/>
                 <input type='submit' value={status==='add'?'Create':'Update'}/>
             </form>
         </>

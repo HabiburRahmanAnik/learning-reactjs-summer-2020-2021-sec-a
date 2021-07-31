@@ -1,19 +1,31 @@
 import UserList from './components/UserList';
 import {users} from './usersData';
-import {useState} from 'react';
+import React, {useState} from 'react';
 import CreateUser from './components/CreateUser';
 import Navbar from './components/Navbar';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
-function App() {
+
+function  App (){
 
  const [userlist, setUserList] = useState(users);
-  const deleteuser = (id)=>{
-    const list = userlist.filter((user)=>user.id !== id);
+
+ 
+  const deleteUser = (id)=>{
+    const list = userlist.filter((u)=>u.id !== id);
     setUserList(list);
   }
-  
+  const UpdateUser = (id,editUser)=>{
+    const list = userlist.filter((u)=>u.id !== id);
+    setUserList([...list,editUser]);
+  }
 
+  const addUser = (user)=>{
+      setUserList([...userlist,user]);
+  }
+
+  
+  
   return (
    
     <Router>
@@ -24,13 +36,15 @@ function App() {
           </Route>
           <Route path='/userlist'>
             <div>
-                <UserList list={userlist} deleteCallback={deleteuser}/>
+                <UserList list={userlist} deleteCallback={deleteUser}/>
             </div>
           </Route>
           <Route path='/create'>
-              <CreateUser status='add' />
+              <CreateUser status='add' addNewUser={addUser} />
           </Route>
-          <Route path='/edit/:id' children={<CreateUser status='edit' users = {users}/>}></Route>
+          <Route path='/edit/:id'>
+            <CreateUser status='edit' updateUserCallBack = {UpdateUser}/>
+          </Route>
           <Route path='*'>
               404 not found
           </Route>          
