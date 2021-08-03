@@ -18,8 +18,15 @@ function  App (){
 
   useFetch(url, setUserList,setLoding);
   useFetch(url2, setProductList,setLoding);
-  console.log(productlist);
- 
+
+  // const get = async (url)=>{
+
+  //   const result =  await fetch(url).then(response=>response.json()).then(json=>json);
+  //   setProductList(result);
+  // }
+  // const response = get(url2);
+
+  console.log();
   const deleteUser = async (id)=>{
     const url = `http://localhost:8000/api/delete/${id}`;
     const data =await fetch(url)
@@ -76,12 +83,29 @@ function  App (){
     setProductList(result);
   }
 
-  const deleteProduct = ()=>{
-
+  const deleteProduct = async(id)=>{
+    setLoding(true);
+    const url = `http://localhost:8000/api/delete/product/${id}`;
+    const data =await fetch(url)
+                      .then(response=>response.json())
+                      .then(json=>json);  
+    setLoding(false);      
+    setProductList(data);
   }
 
-  const updateProduct =(id,editProduct)=>{
-
+  const updateProduct = async (id,editProduct)=>{
+    setLoding(true);
+    const url = `http://localhost:8000/api/editProduct/${id}`;
+    const result = await fetch(url,{
+      method:'post',
+      body:JSON.stringify(editProduct),
+      headers:{
+        "Accept":'application/json',
+        'Content-Type':'application/json'
+      }
+    }).then(response=>response.json()).then(json=>json);
+    setLoding(false);
+    setProductList(result);
   }
 
   
@@ -109,7 +133,7 @@ function  App (){
             <CreateUser status='edit' updateUserCallBack = {UpdateUser}/>
           </Route>
           <Route exact path = '/productList'>
-            <>{!isLoadding && <ProductList productlist={productlist} deleteCallback={deleteProduct} />}
+            <>{!isLoadding && <ProductList list={productlist} deleteCallback={deleteProduct} />}
             {isLoadding && <p>Loading...</p>}</>
           </Route>
           <Route path='/addProduct'>

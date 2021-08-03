@@ -26,5 +26,5 @@ Route::post('/login','UserControllerByAdmin@login');
 Route::post('/addProduct',"UserControllerByAdmin@addProduct");
 Route::get( '/productList', 'UserControllerByAdmin@productList' );
 Route::post('/editProduct/{id}','UserControllerByAdmin@editProduct');
-Route::get('/delete//product/{id}','UserControllerByAdmin@deleteProduct');
+Route::get('/delete/product/{id}','UserControllerByAdmin@deleteProduct');
 
